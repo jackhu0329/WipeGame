@@ -5,11 +5,14 @@ using UnityEngine;
 public class WipeControl : MonoBehaviour
 {
     Vector3 originP = new Vector3(0, 0, 0);
+    Vector3 originR = new Vector3(0, 0, 0);
     bool isPlaying = false;
     // Start is called before the first frame update
     void Start()
     {
         originP = transform.position;
+        originR = transform.eulerAngles;
+        GameEventCenter.AddEvent("DropWipe", DropWipe);
     }
 
     // Update is called once per frame
@@ -30,5 +33,11 @@ public class WipeControl : MonoBehaviour
             }
            // isPlaying = true;
         }
+    }
+
+    private void DropWipe()
+    {
+        transform.position = originP;
+        transform.eulerAngles = originR;
     }
 }

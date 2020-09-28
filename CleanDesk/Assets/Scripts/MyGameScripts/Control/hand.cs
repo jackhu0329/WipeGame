@@ -168,6 +168,7 @@ public class hand : MonoBehaviour
         mJoint.connectedBody = null;
         mCurrentInteractable.mActiveHand = null;
         mCurrentInteractable = null;
+        GameEventCenter.DispatchEvent("DropWipe");
 
 
     }
