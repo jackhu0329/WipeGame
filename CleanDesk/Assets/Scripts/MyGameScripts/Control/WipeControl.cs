@@ -6,7 +6,7 @@ public class WipeControl : MonoBehaviour
 {
     Vector3 originP = new Vector3(0, 0, 0);
     Vector3 originR = new Vector3(0, 0, 0);
-    bool isPlaying = false;
+    public static bool isPlaying = false;
     // Start is called before the first frame update
     void Start()
     {

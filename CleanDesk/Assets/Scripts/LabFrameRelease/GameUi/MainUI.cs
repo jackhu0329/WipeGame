@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class MainUI : MonoBehaviour
 {
+    public Button startButton;
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Z))
@@ -18,6 +19,12 @@ public class MainUI : MonoBehaviour
     private void Start()
     {
         Debug.Log("Game Start");
+        startButton.onClick.AddListener(StartButton);
+       // GameSceneManager.Instance.Change2MainScene();
+    }
+
+    private void StartButton()
+    {
         GameSceneManager.Instance.Change2MainScene();
     }
 }

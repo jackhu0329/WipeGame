@@ -169,7 +169,8 @@ public class hand : MonoBehaviour
         mCurrentInteractable.mActiveHand = null;
         mCurrentInteractable = null;
         GameEventCenter.DispatchEvent("DropWipe");
-
+        GameEventCenter.DispatchEvent("GenerateStain");
+        WipeControl.isPlaying = false;
 
     }
 
