@@ -13,19 +13,29 @@ public class StainManager : MonoBehaviour
         originP = transform.position;
         temp = originP;
         //Instantiate(Stain, new Vector3(temp.x, temp.y, temp.z), Quaternion.identity);
-    
-        for(int x = 0; x < 16; x++)
-        {
-            bias = Random.Range(-0.06f, 0.06f);
-            Debug.Log(bias);
-            Instantiate(Stain, new Vector3(temp.x, temp.y, temp.z+ bias), Quaternion.identity);
-            temp.x -= 0.09f;
-        }
+
+        GenerateStain();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            GenerateStain();
+        }
+    }
+
+    void  GenerateStain()
+    {
+        for (int x = 0; x < 16; x++)
+        {
+            bias = Random.Range(-0.06f, 0.06f);
+            Debug.Log(bias);
+            Instantiate(Stain, new Vector3(temp.x, temp.y, temp.z + bias), Quaternion.identity);
+            temp.x -= 0.09f;
+        }
+
+        temp = originP;
     }
 }
