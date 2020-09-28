@@ -77,17 +77,13 @@ public class hand : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
 
-        if (!other.gameObject.CompareTag("Interactable") || !other.gameObject.CompareTag("PickUpArea"))
+        if (!other.gameObject.CompareTag("Interactable"))
         {
             return;
         }
         pickObject = other.gameObject;
-
-        if (other.gameObject.CompareTag("PickUpArea"))
-        {
-            other.transform.GetChild(2).gameObject.SetActive(true);
-        }
-        else if (other.gameObject.CompareTag("Interactable"))
+        
+        if (other.gameObject.CompareTag("Interactable"))
         {
             mContactInteractables.Add(other.gameObject.GetComponent<Interactable>());
         }
