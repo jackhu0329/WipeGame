@@ -36,11 +36,11 @@ public class StainManager : MonoBehaviour
     {
         float biasZ = positionZ[Random.Range(0, 3)];
         temp.z = biasZ;
-        for (int x = 0; x < 16; x++)
+        for (int x = 0; x < 22; x++)
         {
             bias = Random.Range(-0.06f, 0.06f);
             //Debug.Log(bias);
-            Instantiate(Stain, new Vector3(temp.x, temp.y, temp.z + bias), Quaternion.identity);
+            Instantiate(Stain, new Vector3(temp.x, temp.y+0.45f, temp.z -6+ bias), Quaternion.identity);
             temp.x -= 0.09f;
         }
 
