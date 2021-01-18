@@ -15,9 +15,9 @@ public class StainManager : MonoBehaviour
         temp = originP;
         //Instantiate(Stain, new Vector3(temp.x, temp.y, temp.z), Quaternion.identity);
         positionZ = new float[3];
-        positionZ[0] = 3.2f;
+        positionZ[0] = 3.3f;
         positionZ[1] = 3f;
-        positionZ[2] = 2.8f;
+        positionZ[2] = 2.7f;
         GenerateStain();
         GameEventCenter.AddEvent("GenerateStain", GenerateStain);
     }

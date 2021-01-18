@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR;
 using Valve.VR.InteractionSystem;
+using HTC.UnityPlugin.Vive;
+using GameFrame;
 
 public class hand : MonoBehaviour
 {
@@ -14,94 +16,88 @@ public class hand : MonoBehaviour
     private Interactable mCurrentInteractable = null;
     private List<Interactable> mContactInteractables = new List<Interactable>();
 
-    public GameObject pan;
-    private GameObject pickObject = null;
-
     public int testHand;
+    public GameObject Wipe;
+    private bool hasCorrection = false;
+    private float timer = 0;
 
     // Start is called before the first frame update
     void Start()
     {
         mPose = GetComponent<SteamVR_Behaviour_Pose>();
         mJoint = GetComponent<FixedJoint>();
+        GameEventCenter.AddEvent("ResetHand", ResetHand);
     }
 
+    void Spawn()
+    {
+        GameEventCenter.DispatchEvent("SpawnBook");
+    }
     // Update is called once per frame
     void Update()
     {
 
-        /*if (!Correction.hasCorrection)
+        //Wipe.transform.position = transform.position;
+
+        if (ViveInput.GetPressDown(HandRole.RightHand, ControllerButton.Menu))
         {
-            float timeStart = 0f;
-            bool timerUse = false;
             if (mGrabAction.GetStateDown(mPose.inputSource))
             {
-                if (!timerUse)
-                {
-                    timeStart = Mathf.FloorToInt(Time.time);
-                    timerUse = true;
-                }
-                if (Mathf.FloorToInt(Time.time) > timeStart)
-                {
-                    Correction.handHeight = transform.position.y;
-                    Correction.doCorrection = true;
-                }
+                Spawn();
             }
-            if (mGrabAction.GetStateUp(mPose.inputSource))
-            {
-                timerUse = false;
+        }
 
-            }
-
-            return;
-        }*/
-
+        //按下Left Menu時觸發
+        if (ViveInput.GetPressDown(HandRole.LeftHand, ControllerButton.Menu))
+        {
+            
+        }
 
         if (mGrabAction.GetStateDown(mPose.inputSource))
         {
+            timer += Time.deltaTime;
+            if (timer >= 2.0f&& !hasCorrection)
+            {
+                //GameEntityManager.Instance.GetCurrentSceneRes<MainSceneRes>().mainSceneUI.SetUIActive(0, false);
+                //GameEventCenter.DispatchEvent<Vector3>(EventName.EnableCameraRig, this.transform.position);
+                GameEventCenter.DispatchEvent<Vector3>("CameraCorrection", transform.position);
+                GameEventCenter.DispatchEvent("CorrectionUI");
+                hasCorrection = true;
+                //Correction.hasCorrection = true;
+            }
+
             Debug.Log(mPose.inputSource + " down ");
-            Pickup();
+            //Pickup();
         }
         if (mGrabAction.GetStateUp(mPose.inputSource))
         {
             Debug.Log(mPose.inputSource + " up ");
-            Drop();
-            /*if (ScoreManager.gameStatus == 5)
-            {
-                GameEventCenter.DispatchEvent("InitStatus");
-            }*/
+            //Drop();
 
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-
+        Debug.Log("touch1");
         if (!other.gameObject.CompareTag("Interactable"))
         {
             return;
         }
-        pickObject = other.gameObject;
-        
-        if (other.gameObject.CompareTag("Interactable"))
+        else if (other.gameObject.CompareTag("Interactable"))
         {
+            Debug.Log("touch2");
             mContactInteractables.Add(other.gameObject.GetComponent<Interactable>());
         }
-        
+
 
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (!other.gameObject.CompareTag("Interactable")|| !other.gameObject.CompareTag("PickUpArea"))
+        if (!other.gameObject.CompareTag("Interactable"))
         {
             return;
-        }
-        pickObject = null;
-        //  Debug.Log("OnTriggerExit  ");
-        if (other.gameObject.CompareTag("PickUpArea"))
-        {
-            other.transform.GetChild(2).gameObject.SetActive(false);
         }
         else if (other.gameObject.CompareTag("Interactable"))
         {
@@ -111,31 +107,21 @@ public class hand : MonoBehaviour
 
     private void Pickup()
     {
-        mCurrentInteractable = GetNearestInteractable();
 
+        mCurrentInteractable = GetNearestInteractable();
+        Debug.Log("pick1");
         if (!mCurrentInteractable)
             return;
 
         if (mCurrentInteractable.mActiveHand)
             mCurrentInteractable.mActiveHand.Drop();
-
+        Debug.Log("pick2");
         //mCurrentInteractable.transform.position =new Vector3(transform.position.x - 0.2f, transform.position.y-0.2f, transform.position.z);
         //mCurrentInteractable.transform.eulerAngles = new Vector3(transform.rotation.x , 0 , -90);
 
         mCurrentInteractable.transform.position = transform.position;
 
-        /*if (mCurrentInteractable.gameObject.name == "panObject(Clone)")
-        {
-            mCurrentInteractable.transform.position = new Vector3(transform.position.x - 0.1f, transform.position.y - 0.1f, transform.position.z);
-            mCurrentInteractable.transform.eulerAngles = new Vector3(transform.rotation.x - 90, 0, -90);
-            PickUpStatusControl(mCurrentInteractable);
-        }
-        else if (mCurrentInteractable.gameObject.name == "dishObject(Clone)")
-        {
-            mCurrentInteractable.transform.position = new Vector3(transform.position.x - 0.1f, transform.position.y - 0.1f, transform.position.z);
-            mCurrentInteractable.transform.eulerAngles = new Vector3(0, 0, 0);
-            PickUpStatusControl(mCurrentInteractable);
-        }*/
+        //GameEventCenter.DispatchEvent("BookNumber", mCurrentInteractable.GetComponent<BookEntity>().n+1); 
 
         Rigidbody targetBody = mCurrentInteractable.GetComponent<Rigidbody>();
         mJoint.connectedBody = targetBody;
@@ -148,29 +134,23 @@ public class hand : MonoBehaviour
         if (!mCurrentInteractable)
             return;
 
+        GameEventCenter.DispatchEvent("BookNumber", 0);
+
         /*mCurrentInteractable.transform.position = originPosition;
         mCurrentInteractable.transform.rotation = originRotation;*/
-        /*if (mCurrentInteractable.gameObject.name == "panObject(Clone)")
-        {
-            GameEventCenter.DispatchEvent("SpawnPan");
-        }
-        else if (mCurrentInteractable.gameObject.name == "dishObject(Clone)")
-        {
-            GameEventCenter.DispatchEvent("SpawnDish");
-        }
-        Destroy(mCurrentInteractable.gameObject);
-        GameEventCenter.DispatchEvent("InitStatus");*/
-        /*Rigidbody targetBody = mCurrentInteractable.GetComponent<Rigidbody>();
-        targetBody.velocity = mPose.GetVelocity();
-        targetBody.angularVelocity = mPose.GetAngularVelocity();*/
 
-        //Destroy(mCurrentInteractable.transform.gameObject);//destroy the object after drop
+        Rigidbody targetBody = mCurrentInteractable.GetComponent<Rigidbody>();
+        //targetBody.velocity = mPose.GetVelocity()*10;
+        targetBody.velocity = new Vector3(mPose.GetVelocity().z * 10, mPose.GetVelocity().y * 10,- mPose.GetVelocity().x * 10);
+
+        targetBody.angularVelocity = mPose.GetAngularVelocity()*10;
+
+
+        mContactInteractables = new List<Interactable>();
         mJoint.connectedBody = null;
         mCurrentInteractable.mActiveHand = null;
         mCurrentInteractable = null;
-        GameEventCenter.DispatchEvent("DropWipe");
-        GameEventCenter.DispatchEvent("GenerateStain");
-        WipeControl.isPlaying = false;
+
 
     }
 
@@ -179,14 +159,21 @@ public class hand : MonoBehaviour
         Interactable nearest = null;
         float minDistance = float.MaxValue;
         float distance = 0.0f;
-
+        Debug.Log("GetNearestInteractable1");
         foreach (Interactable interactive in mContactInteractables)
         {
             distance = (interactive.transform.position - transform.position).sqrMagnitude;
-
-            if (distance < minDistance && distance < 0.1f && interactive.tag == ("Interactable"))//手把真的有碰到物體 且物體還是可以動的狀態
+            Debug.Log("GetNearestInteractable2:"+ interactive.name);
+            /*if (distance < minDistance && distance < 0.1f && interactive.tag == ("Interactable"))//手把真的有碰到物體 且物體還是可以動的狀態
             {
                 minDistance = distance;
+                nearest = interactive;
+
+            }*/
+
+            if ( interactive.tag == ("Interactable"))//手把真的有碰到物體 且物體還是可以動的狀態
+            {
+                Debug.Log("GetNearestInteractable3:" + interactive.name);
                 nearest = interactive;
 
             }
@@ -198,15 +185,9 @@ public class hand : MonoBehaviour
     }
 
 
-    private void PickUpStatusControl(Interactable interactable)
+
+    public void ResetHand()
     {
-        /*if (ScoreManager.gameStatus == 0 && interactable.gameObject.name == "panObject(Clone)")
-        {
-            GameEventCenter.DispatchEvent("NextStatus");
-        }
-        else if (ScoreManager.gameStatus == 1 && interactable.gameObject.name == "dishObject(Clone)")
-        {
-            GameEventCenter.DispatchEvent("NextStatus");
-        }*/
+        Drop();
     }
 }
