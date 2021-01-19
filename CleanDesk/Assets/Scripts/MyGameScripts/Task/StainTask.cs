@@ -11,6 +11,8 @@ namespace GameFrame
         private GameObject objStain,objWipe;
         private GameObject Spawn;
 
+        private int stainCount = 0;
+
         private float high, mid, low;
 
 
@@ -25,6 +27,9 @@ namespace GameFrame
 
             GameEventCenter.AddEvent("GenerateStain", GenerateStain);
             GameEventCenter.AddEvent("GenerateWipe", GenerateWipe);
+            GameEventCenter.AddEvent("Clean", Clean);
+
+            Init();
             yield return null;
         }
 
@@ -51,6 +56,12 @@ namespace GameFrame
             }
         }
 
+        void Init()
+        {
+            GenerateWipe();
+            GenerateStain();
+        }
+
         void SpawnStain()
         {
             Debug.Log("SpawnStain start");
@@ -72,7 +83,7 @@ namespace GameFrame
                 float bias = Random.Range(-0.09f, 0.09f);
 
                 GameObject.Instantiate(objStain, new Vector3(Spawn.transform.position.x-0.09f*x, Spawn.transform.position.y -0.18f , Spawn.transform.position.z  + biasZ*0.2f+ bias), Quaternion.identity);
-
+                stainCount++;
             }
 
 
@@ -81,11 +92,23 @@ namespace GameFrame
         void GenerateWipe()
         {
 
-            GameObject.Instantiate(objWipe, new Vector3(Spawn.transform.position.x+2.5f , Spawn.transform.position.y , Spawn.transform.position.z ), Quaternion.identity);
+            GameObject.Instantiate(objWipe, new Vector3(Spawn.transform.position.x-2.5f , Spawn.transform.position.y , Spawn.transform.position.z ), Quaternion.identity);
 
         }
 
 
+
+        void Clean()
+        {
+            stainCount--;
+
+            if (stainCount == 0)
+            {
+                GenerateStain();
+                GameEventCenter.DispatchEvent<AudioSelect>("PlayAudio", AudioSelect.GetScore);
+                GameEventCenter.DispatchEvent("GetScore");
+            }
+        }
 
 
 

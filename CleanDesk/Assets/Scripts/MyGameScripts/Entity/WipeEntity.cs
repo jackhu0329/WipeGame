@@ -17,7 +17,8 @@ namespace GameFrame
         // Start is called before the first frame update
         void Awake()
         {
-            GameEventCenter.DispatchEvent("AddStain");
+            
+            GameEventCenter.AddEvent("ResetWipe", ResetWipe);
             originP = transform.position;
             transform.eulerAngles = new Vector3(-83.638f, 0, 0);
         }
@@ -30,22 +31,33 @@ namespace GameFrame
 
         private void AddStain()
         {
+            Debug.Log("XXX");
             stainCount++;
             used = true;
         }
 
         private void OnTriggerExit(Collider other)
         {
-            if(other.name == "Stain(Clone)")
+            Debug.Log(other.name);
+            if (other.name == "Stain(Clone)")
             {
                 stainCount--;
+                GameEventCenter.DispatchEvent("Clean");
+                GameEventCenter.DispatchEvent<AudioSelect>("PlayAudio", AudioSelect.Success);
                 Destroy(other.gameObject);
             }
 
-            if (stainCount == 0)
+            //Debug.Log(stainCount);
+            /*if (stainCount == 0)
             {
                 GameEventCenter.DispatchEvent("GenerateStain");
-            }
+            }*/
+        }
+
+
+        private void ResetWipe()
+        {
+            transform.position = originP;
         }
     }
 }

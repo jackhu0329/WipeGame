@@ -10,7 +10,7 @@ namespace GameFrame
         private ParticleSystem particleObj;
         public void Awake()
         {
-            GameEventCenter.DispatchEvent("Add");
+            
             //transform.GetComponent<Outline>().enabled = false;
         }
         public override void EntityDispose()

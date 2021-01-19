@@ -37,21 +37,6 @@ public class hand : MonoBehaviour
     void Update()
     {
 
-        //Wipe.transform.position = transform.position;
-
-        if (ViveInput.GetPressDown(HandRole.RightHand, ControllerButton.Menu))
-        {
-            if (mGrabAction.GetStateDown(mPose.inputSource))
-            {
-                Spawn();
-            }
-        }
-
-        //按下Left Menu時觸發
-        if (ViveInput.GetPressDown(HandRole.LeftHand, ControllerButton.Menu))
-        {
-            
-        }
 
         if (mGrabAction.GetStateDown(mPose.inputSource))
         {
@@ -67,12 +52,12 @@ public class hand : MonoBehaviour
             }
 
             Debug.Log(mPose.inputSource + " down ");
-            //Pickup();
+            Pickup();
         }
         if (mGrabAction.GetStateUp(mPose.inputSource))
         {
             Debug.Log(mPose.inputSource + " up ");
-            //Drop();
+            Drop();
 
         }
     }
@@ -134,7 +119,7 @@ public class hand : MonoBehaviour
         if (!mCurrentInteractable)
             return;
 
-        GameEventCenter.DispatchEvent("BookNumber", 0);
+        GameEventCenter.DispatchEvent("ResetWipe");
 
         /*mCurrentInteractable.transform.position = originPosition;
         mCurrentInteractable.transform.rotation = originRotation;*/

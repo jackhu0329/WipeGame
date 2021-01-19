@@ -24,5 +24,11 @@ public class test : MonoBehaviour
             Debug.Log("GenerateWipe");
             GameEventCenter.DispatchEvent("GenerateWipe");
         }
+
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            Debug.Log("ResetWipe");
+            GameEventCenter.DispatchEvent("ResetWipe");
+        }
     }
 }
