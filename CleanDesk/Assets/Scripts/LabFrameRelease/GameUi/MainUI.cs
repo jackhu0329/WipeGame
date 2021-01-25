@@ -20,7 +20,7 @@ public class MainUI : MonoBehaviour
     {
         Debug.Log("Game Start");
         startButton.onClick.AddListener(StartButton);
-        GameSceneManager.Instance.Change2MainScene();
+        //GameSceneManager.Instance.Change2MainScene();
         // GameSceneManager.Instance.Change2MainScene();
     }
 

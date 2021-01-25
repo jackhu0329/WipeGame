@@ -15,7 +15,8 @@ public class GameSceneUI : MonoBehaviour
     public GameObject Result;
     private bool gameStart = false;
     private int StainCount = 0;
-    private bool hasCorrection = true;
+    private bool hasCorrection = false;
+    private bool success = false;
     
     void Awake()
     {
@@ -24,6 +25,7 @@ public class GameSceneUI : MonoBehaviour
         GameEventCenter.AddEvent("GetScore", GetScore);
         GameEventCenter.AddEvent("Add", Add);
         GameEventCenter.AddEvent("Del", Del);
+        GameEventCenter.AddEvent<bool>("MotionSuccess", MotionSuccess);
         GameEventCenter.AddEvent("CorrectionUI", CorrectionUI);
 
         //GameEventCenter.AddEvent<int>("BookNumber", BookNumber);
@@ -33,10 +35,7 @@ public class GameSceneUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("UI start");
-        //test
 
-        //test
         if(mode == 1&& hasCorrection)
         {
             if (clock > 0)
@@ -45,6 +44,7 @@ public class GameSceneUI : MonoBehaviour
                 time.text = "" + Mathf.FloorToInt(clock);
             }else
             {
+                UI = false;
                 Result.SetActive(true);
                 clock = 0;
                 time.text = "" + Mathf.FloorToInt(clock);
@@ -74,8 +74,9 @@ public class GameSceneUI : MonoBehaviour
     private void OnGUI()
     {
         GUIStyle gameUI = new GUIStyle();
-        gameUI.normal.textColor = new Color(255, 255, 255);
+        gameUI.normal.textColor = new Color(0, 0, 0);
         gameUI.fontSize = 60;
+        gameUI.fontStyle = FontStyle.Bold;
 
         if (UI&& hasCorrection)
         {
@@ -83,12 +84,26 @@ public class GameSceneUI : MonoBehaviour
             "已完成" + score + "次"
             , gameUI);
 
-        }else{
-            GUI.Label(new Rect(Screen.width / 10 * 4, (Screen.height / 6 * 1), 200, 100),
+            if (success)
+            {
+                GUI.Label(new Rect(Screen.width / 10 * 4, (Screen.height / 6 * 1), 200, 100),
+                "動作成功!!"
+                , gameUI);
+            }
+
+        }
+        else if(UI)
+        {
+            GUI.Label(new Rect(Screen.width / 10 * 2, (Screen.height / 6 * 1), 200, 100),
             "請伸直手臂並按住扳機鍵進行校正"
             , gameUI);
         }
 
+    }
+
+    private void MotionSuccess(bool s)
+    {
+        success = s;
     }
 
     private void CorrectionUI()

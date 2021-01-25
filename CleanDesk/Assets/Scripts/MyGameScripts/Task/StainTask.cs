@@ -106,7 +106,10 @@ namespace GameFrame
             {
                 GenerateStain();
                 GameEventCenter.DispatchEvent<AudioSelect>("PlayAudio", AudioSelect.GetScore);
+                GameEventCenter.DispatchEvent<bool>("MotionSuccess", true);
                 GameEventCenter.DispatchEvent("GetScore");
+                GameEventCenter.DispatchEvent("ResetHand");
+                //GenerateWipe();
             }
         }
 

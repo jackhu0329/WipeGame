@@ -38,19 +38,22 @@ public class hand : MonoBehaviour
     {
 
 
-        if (mGrabAction.GetStateDown(mPose.inputSource))
+        if (ViveInput.GetPress(HandRole.RightHand, ControllerButton.Menu))
         {
+            Debug.Log("CorrectionUI:" + timer);
             timer += Time.deltaTime;
-            if (timer >= 2.0f&& !hasCorrection)
+            if (timer >= 2.0f && !hasCorrection)
             {
-                //GameEntityManager.Instance.GetCurrentSceneRes<MainSceneRes>().mainSceneUI.SetUIActive(0, false);
-                //GameEventCenter.DispatchEvent<Vector3>(EventName.EnableCameraRig, this.transform.position);
                 GameEventCenter.DispatchEvent<Vector3>("CameraCorrection", transform.position);
                 GameEventCenter.DispatchEvent("CorrectionUI");
                 hasCorrection = true;
-                //Correction.hasCorrection = true;
+                //Pickup();
             }
+        }
 
+
+        if (mGrabAction.GetStateDown(mPose.inputSource))
+        {
             Debug.Log(mPose.inputSource + " down ");
             Pickup();
         }
@@ -58,7 +61,7 @@ public class hand : MonoBehaviour
         {
             Debug.Log(mPose.inputSource + " up ");
             Drop();
-
+            
         }
     }
 
@@ -92,7 +95,7 @@ public class hand : MonoBehaviour
 
     private void Pickup()
     {
-
+        GameEventCenter.DispatchEvent<bool>("MotionSuccess", false);
         mCurrentInteractable = GetNearestInteractable();
         Debug.Log("pick1");
         if (!mCurrentInteractable)
@@ -104,7 +107,7 @@ public class hand : MonoBehaviour
         //mCurrentInteractable.transform.position =new Vector3(transform.position.x - 0.2f, transform.position.y-0.2f, transform.position.z);
         //mCurrentInteractable.transform.eulerAngles = new Vector3(transform.rotation.x , 0 , -90);
 
-        mCurrentInteractable.transform.position = transform.position;
+        mCurrentInteractable.transform.position = new Vector3(transform.position.x + 0.03f, transform.position.y + 0.14f, transform.position.z);
 
         //GameEventCenter.DispatchEvent("BookNumber", mCurrentInteractable.GetComponent<BookEntity>().n+1); 
 
@@ -119,17 +122,18 @@ public class hand : MonoBehaviour
         if (!mCurrentInteractable)
             return;
 
-        GameEventCenter.DispatchEvent("ResetWipe");
+
 
         /*mCurrentInteractable.transform.position = originPosition;
         mCurrentInteractable.transform.rotation = originRotation;*/
 
-        Rigidbody targetBody = mCurrentInteractable.GetComponent<Rigidbody>();
+        /*Rigidbody targetBody = mCurrentInteractable.GetComponent<Rigidbody>();
         //targetBody.velocity = mPose.GetVelocity()*10;
         targetBody.velocity = new Vector3(mPose.GetVelocity().z * 10, mPose.GetVelocity().y * 10,- mPose.GetVelocity().x * 10);
 
-        targetBody.angularVelocity = mPose.GetAngularVelocity()*10;
+        targetBody.angularVelocity = mPose.GetAngularVelocity()*10;*/
 
+        GameEventCenter.DispatchEvent("ResetWipe");
 
         mContactInteractables = new List<Interactable>();
         mJoint.connectedBody = null;
@@ -174,5 +178,6 @@ public class hand : MonoBehaviour
     public void ResetHand()
     {
         Drop();
+        //GameEventCenter.DispatchEvent("ResetWipe");
     }
 }

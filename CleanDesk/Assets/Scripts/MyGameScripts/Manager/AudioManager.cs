@@ -48,7 +48,7 @@ namespace GameFrame
                 case AudioSelect.fail: GameAudioController.Instance.PlayOneShot(fail); break;
                 case AudioSelect.EndAudio: GameOver(); break;
                 case AudioSelect.BGM: GameAudioController.Instance.LoopPlay(BGM); break;
-                case AudioSelect.GetScore: GameAudioController.Instance.PlayOneShot(GetScore); break;
+                case AudioSelect.GetScore: Feedback(); break;
             }
         }
 
@@ -61,17 +61,17 @@ namespace GameFrame
             }
         }
 
-        /*private void Success()
+        private void Feedback()
         {
             GameAudioController.Instance.PlayOneShot(GetScore);
-            int x = 0;
+            /*int x = Random.Range(1,3);
             switch (x){
                 case 0: GameAudioController.Instance.PlayOneShot(S1);break;
                 case 1: GameAudioController.Instance.PlayOneShot(S2); break;
                 case 2: GameAudioController.Instance.PlayOneShot(S3); break;
-            }
+            }*/
             
-        }*/
+        }
     }
 }
 

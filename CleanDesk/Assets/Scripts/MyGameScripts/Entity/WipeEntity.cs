@@ -36,7 +36,7 @@ namespace GameFrame
             used = true;
         }
 
-        private void OnTriggerExit(Collider other)
+        private void OnTriggerEnter(Collider other)
         {
             Debug.Log(other.name);
             if (other.name == "Stain(Clone)")

@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 1452149159198581982}
   m_Layer: 0
   m_Name: Wipe
-  m_TagString: Untagged
+  m_TagString: Interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -96,7 +96,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!65 &7474544884920729268
 BoxCollider:
@@ -109,8 +109,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.01502929, y: 0.051294573, z: 0.014235027}
-  m_Center: {x: -0.0006188047, y: -0.031484604, z: -0.013101592}
+  m_Size: {x: 0.015029291, y: 0.051294565, z: 0.032995094}
+  m_Center: {x: -0.00061880494, y: -0.031484634, z: -0.02248165}
 --- !u!114 &5699674045420997633
 MonoBehaviour:
   m_ObjectHideFlags: 0
